@@ -8,13 +8,20 @@ skidb = Db('ski')
 
 class Generator:
 
-	_exit_factor = 0.7
-	_enter_factor = 0.3
+	_exit_factor = 0.5 # from 0 to 1
+	_enter_factor = 0.3 # from 0 to 1
+
+	_waiting_time = 0.7 # seconds
+	_skiing_time = 1.3 # seconds
+	_entering_time = 0.5 # seconds
 
 	def __init__(self, no_ids):
 		self._out_of_circuit = [i for i in range(no_ids)]
 		self._waiting_q = Queue()
 		self._skiing_q = Queue()
+		self._last_time_waiting = time.time()
+		self._last_time_skiing = time.time()
+		self._last_time_entering = time.time()
 
 
 	def _enter_waiting_q_from_outside(self):
@@ -63,15 +70,27 @@ class Generator:
 	def run(self):
 		while(True):
 
-			self._enter_waiting_q_from_outside()
+			current_time = time.time()
 
-			self._enter_waiting_q_from_skiing_q()
 
-			self._enter_skiing_q_from_waiting_q()
+			if current_time - self._last_time_entering >= self._entering_time:
+				self._enter_waiting_q_from_outside()
+				self._last_time_entering = current_time
+				self._show_current_state()
+
+			if current_time - self._last_time_skiing >= self._skiing_time:
+				self._enter_waiting_q_from_skiing_q()
+				self._last_time_skiing = current_time
+				self._show_current_state()
+
+			if current_time - self._last_time_waiting >= self._waiting_time:
+				self._enter_skiing_q_from_waiting_q()
+				self._last_time_waiting = current_time
+				self._show_current_state()
 			
-			self._show_current_state()
+			
 
-			time.sleep(0.5)
+			# time.sleep(0.5)
 
 
 g = Generator(100)
