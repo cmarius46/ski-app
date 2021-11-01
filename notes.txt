@@ -1,0 +1,21 @@
+when installing requirements for firebase, encountered "no module named 'Crypto' having the module 
+already installed
+
+solved it by changing the folder name from 'crypto' to 'Crypto' inside 
+C:\Users\Gabi\anaconda3\Lib\site-packages
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
