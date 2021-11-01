@@ -12,17 +12,42 @@ class Db:
 
 
 	def __enter__(self):
-		return self.connection
+		return self
 
 
-	def __exit__(self):
+	def __exit__(self ,type, value, traceback):
 		self.connection.close()
 
 
+	def execute_query(self, query, parameters=None):
+		cursor = self.connection.cursor()
+		if parameters is not None:
+			cursor.execute(query, parameters)
+		else:
+			cursor.execute(query)
+		self.connection.commit()
+		cursor.close()
 
 
+def _setup(db_name):
+	setup_query = '''CREATE TABLE entries (
+	            id INTEGER PRIMARY KEY,
+	            card_id INTEGER,
+	            scanning_time datetime);'''
+
+	with Db(db_name) as db:
+		db.execute_query(setup_query)
+
+	print('Table created successfully !')
 
 
+def _delete_entries_from_ski():
+	delete_query = '''DROP TABLE entries'''
+
+	with Db('ski') as db:
+		db.execute_query(delete_query)
+
+	print('Table deleted successfully !')
 
 
 

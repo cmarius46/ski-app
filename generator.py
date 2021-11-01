@@ -87,15 +87,6 @@ class Generator:
 				self._enter_skiing_q_from_waiting_q()
 				self._last_time_waiting = current_time
 				self._show_current_state()
-			
-			
-
-			# time.sleep(0.5)
-
-
-g = Generator(100)
-g.run()
-
 
 
 
