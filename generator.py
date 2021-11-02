@@ -49,13 +49,21 @@ class Generator:
 				self._waiting_q.put_nowait(finished_skiing)
 
 
-	def _enter_skiing_q_from_waiting_q(self):
+	def _insert_into_db(self, db, card_id):
+		query = '''INSERT INTO entries (card_id, scanning_time)
+					VALUES (?, ?)'''
+		parameters = [card_id, time.ctime()]
+		db.execute_query(query, parameters)
+
+
+	def _enter_skiing_q_from_waiting_q(self, db):
 		# entering skiing q from waiting q
 		if not self._waiting_q.empty():
 			# we have ppl waiting
 
 			starts_skiing = self._waiting_q.get_nowait()
 			self._skiing_q.put_nowait(starts_skiing)
+			self._insert_into_db(db, starts_skiing)
 
 
 	def _show_current_state(self):
@@ -68,25 +76,27 @@ class Generator:
 
 
 	def run(self):
-		while(True):
 
-			current_time = time.time()
+		with Db('ski') as db:
+			while(True):
+
+				current_time = time.time()
 
 
-			if current_time - self._last_time_entering >= self._entering_time:
-				self._enter_waiting_q_from_outside()
-				self._last_time_entering = current_time
-				self._show_current_state()
+				if current_time - self._last_time_entering >= self._entering_time:
+					self._enter_waiting_q_from_outside()
+					self._last_time_entering = current_time
+					self._show_current_state()
 
-			if current_time - self._last_time_skiing >= self._skiing_time:
-				self._enter_waiting_q_from_skiing_q()
-				self._last_time_skiing = current_time
-				self._show_current_state()
+				if current_time - self._last_time_skiing >= self._skiing_time:
+					self._enter_waiting_q_from_skiing_q()
+					self._last_time_skiing = current_time
+					self._show_current_state()
 
-			if current_time - self._last_time_waiting >= self._waiting_time:
-				self._enter_skiing_q_from_waiting_q()
-				self._last_time_waiting = current_time
-				self._show_current_state()
+				if current_time - self._last_time_waiting >= self._waiting_time:
+					self._enter_skiing_q_from_waiting_q(db)
+					self._last_time_waiting = current_time
+					self._show_current_state()
 
 
 

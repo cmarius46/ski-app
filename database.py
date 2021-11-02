@@ -41,7 +41,7 @@ def _setup(db_name):
 	print('Table created successfully !')
 
 
-def _delete_entries_from_ski():
+def _delete_entries_table_from_ski():
 	delete_query = '''DROP TABLE entries'''
 
 	with Db('ski') as db:
@@ -50,4 +50,10 @@ def _delete_entries_from_ski():
 	print('Table deleted successfully !')
 
 
+def _delete_entries_content():
+	delete_query = '''DELETE FROM entries'''
 
+	with Db('ski') as db:
+		db.execute_query(delete_query)
+
+	print('Table content deleted successfully !')
