@@ -29,6 +29,20 @@ class Db:
 		cursor.close()
 
 
+	def execute_return_query(self, query, parameters=None):
+		cursor = self.connection.cursor()
+		if parameters is not None:
+		    cursor.execute(query, parameters)
+		else:
+		    cursor.execute(query)
+
+		data = cursor.fetchall()
+		self.connection.commit()
+		cursor.close()
+
+		return data
+
+
 def _setup(db_name):
 	setup_query = '''CREATE TABLE entries (
 	            id INTEGER PRIMARY KEY,

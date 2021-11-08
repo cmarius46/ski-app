@@ -4,19 +4,16 @@ from database import _setup
 from database import Db
 from database import _delete_entries_content
 import time
+import app
+
 
 # _setup('ski')
-_delete_entries_content()
+# _delete_entries_content()
 
-g = generator.Generator(100)
-g.run()
+# g = generator.Generator(1000)
+# g.run()
 
-
-# with Db('ski') as db:
-# 	card_id = 5
-
-# 	query = '''INSERT INTO entries (card_id, scanning_time)
-# 				VALUES (?, ?)'''
-# 	parameters = [card_id,time.ctime()]
-# 	db.execute_query(query, parameters)		
+app = app.App()
+tim = app.calculate_time()
+print(tim)
 

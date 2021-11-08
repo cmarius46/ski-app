@@ -8,7 +8,7 @@ skidb = Db('ski')
 
 class Generator:
 
-	_exit_factor = 0.5 # from 0 to 1
+	_exit_factor = 0.9 # from 0 to 1
 	_enter_factor = 0.3 # from 0 to 1
 
 	_waiting_time = 0.7 # seconds
@@ -22,6 +22,7 @@ class Generator:
 		self._last_time_waiting = time.time()
 		self._last_time_skiing = time.time()
 		self._last_time_entering = time.time()
+		self._insert_counter = 0
 
 
 	def _enter_waiting_q_from_outside(self):
@@ -64,6 +65,8 @@ class Generator:
 			starts_skiing = self._waiting_q.get_nowait()
 			self._skiing_q.put_nowait(starts_skiing)
 			self._insert_into_db(db, starts_skiing)
+			self._insert_counter += 1
+			print(self._insert_counter)
 
 
 	def _show_current_state(self):
