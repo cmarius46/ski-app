@@ -4,9 +4,14 @@ already installed
 solved it by changing the folder name from 'crypto' to 'Crypto' inside 
 C:\Users\Gabi\anaconda3\Lib\site-packages
 
+TODO - generator : create 2 possibilities for it's use -> verbose = 1 / verbose = 0 -> when verbose = 0 
+the data is generated faster and the results are not shown
+// might not be needed, as faster generation would mean very similar time entries for the db 
 
+TODO - generator : make the _enter_factor fluctuate -> at the beginning we have a big enter_factor, so 
+very few people enter -> at the middle of the day we have a small enter_factor and so on 
 
-
+TODO - generator : rename the _exit_factor and _enter_factor to "treshold"
 
 
 

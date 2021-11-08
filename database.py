@@ -29,6 +29,20 @@ class Db:
 		cursor.close()
 
 
+	def execute_return_query(self, query, parameters=None):
+		cursor = self.connection.cursor()
+		if parameters is not None:
+		    cursor.execute(query, parameters)
+		else:
+		    cursor.execute(query)
+
+		data = cursor.fetchall()
+		self.connection.commit()
+		cursor.close()
+
+		return data
+
+
 def _setup(db_name):
 	setup_query = '''CREATE TABLE entries (
 	            id INTEGER PRIMARY KEY,
@@ -41,7 +55,7 @@ def _setup(db_name):
 	print('Table created successfully !')
 
 
-def _delete_entries_from_ski():
+def _delete_entries_table_from_ski():
 	delete_query = '''DROP TABLE entries'''
 
 	with Db('ski') as db:
@@ -50,4 +64,10 @@ def _delete_entries_from_ski():
 	print('Table deleted successfully !')
 
 
+def _delete_entries_content():
+	delete_query = '''DELETE FROM entries'''
 
+	with Db('ski') as db:
+		db.execute_query(delete_query)
+
+	print('Table content deleted successfully !')
